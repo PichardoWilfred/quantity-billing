@@ -7,7 +7,7 @@
                     Buscar tabla
                 </span>
             </button>
-            <button class="flex items-center ml-auto p-3 hover:bg-black-2 rounded-full lg:rounded-md transition-all">
+            <button @click.prevent="add_list()" class="flex items-center ml-auto p-3 hover:bg-black-2 rounded-full lg:rounded-md transition-all">
                 <img src="../assets/add-table.svg" class="h-7 max-lg:w-7 lg:mr-3" alt="" srcset="">
                 <span class="max-lg:hidden lg:flex text-md font-medium">Añadir tabla</span>
             </button>
@@ -19,12 +19,15 @@
                 <OnClickOutside @trigger="() => { config.show = false }">
                     <Transition>
                         <ul v-show="config.show"
-                        class="absolute rounded-md top-0 right-0 bg-white text-black-1 border border-gray-2 divide-y divide-gray-2 shadow-[10px_8px_24px_rgba(149,157,165,0.2)] transition-all">
-                            <li v-for="({title, action, icon}, index) in config.options" :key="index" @click="action"
-                            class="flex items-center px-3 py-2 w-max cursor-pointer">
+                        class="absolute rounded-md top-0 right-0 bg-white text-black-1 border border-gray-2 divide-y divide-gray-2 shadow-[10px_8px_24px_rgba(149,157,165,0.2)] transition-all z-40">
+                            <li v-for="({title, action, icon, version}, index) in config.options" :key="index" @click="() => { action(); close_config()}"
+                            class="flex items-center px-3 py-2 w-full min-w-max cursor-pointer">
                             <i class="fa-solid mr-3 m-2" :class="icon"></i>
                                 <span class="font-medium text-base">
-                                    {{ title }}
+                                    {{ title }} 
+                                </span>
+                                <span v-if="version" class="text-gray-4 ml-2">
+                                    {{ version }}
                                 </span>
                             </li>
                         </ul>
@@ -35,6 +38,8 @@
     </header>  
 </template>
 <script>
+
+import { mapActions } from 'vuex';
 import { OnClickOutside } from '@vueuse/components'
 export default {
     name: 'Header',
@@ -48,16 +53,19 @@ export default {
                         title: 'Reiniciar aplicación',
                         icon: 'fa-arrows-rotate',
                         action: () => {
-                            console.log('clicked reboot');
-                            this.close_config();
                         }
                     },
                     {
                         title: 'Descargar aplicación',
                         icon: 'fa-download',
                         action: () => {
-                            console.log('clicked other');
-                            this.close_config();
+                        }
+                    },
+                    {
+                        title: 'Versión',
+                        version: 'v0.1.0',
+                        icon: 'fa-code-merge',
+                        action: () => {
                         }
                     },
                 ]
@@ -67,7 +75,8 @@ export default {
     methods: {
         close_config(){
             this.config.show = false;
-        }
+        },
+        ...mapActions(['add_list'])
     }
 }
 </script>
