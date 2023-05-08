@@ -40,7 +40,7 @@
 <script>
 
 import { mapActions } from 'vuex';
-import { OnClickOutside } from '@vueuse/components'
+import { OnClickOutside } from '@vueuse/components';
 export default {
     name: 'Header',
     components:{OnClickOutside},
@@ -81,13 +81,4 @@ export default {
 }
 </script>
 <style scoped>
-    .v-enter-active,
-.v-leave-active {
-  transition: opacity 0.15s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
 </style>

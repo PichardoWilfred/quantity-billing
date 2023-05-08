@@ -1,6 +1,6 @@
 <template>
     <ul class="flex flex-shrink-0 space-x-10 px-4 flex-nowrap overflow-scroll pt-6">
-        <li v-for="(list, index) in lists" :key="index" class="flex-shrink-0 first:mr-0 font-light text-lg max-w-[100%] cursor-pointer" 
+        <li v-for="(list, index) in lists" :key="index" class="flex-shrink-0 first:mr-0 font-light text-lg max-w-[90px] cursor-pointer truncate" 
         :class="{'selected': list.id === selected_list.id}" @click="select_list(list)">
             {{ list.label.value }}
         </li>
