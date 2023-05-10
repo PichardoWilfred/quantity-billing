@@ -9,10 +9,21 @@
             <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Imprimir</span>
         </button>
 
-        <button @click="open_modal('delete')" class="header-button ml-auto">
-            <i class="fa-solid fa-trash text-xl"></i>
-            <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Eliminar</span>
-        </button>
+        <template v-if="!select">
+            <button @click="open_modal('delete')" class="header-button ml-auto">
+                <i class="fa-solid fa-trash text-xl"></i>
+                <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Eliminar</span>
+            </button>        
+        </template>
+        <template v-else>
+            <button @click="() => { $emit('unselect') }" class="header-button ml-auto">
+                <i class="fa-solid fa-xmark text-xl"></i>
+                <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Cancelar</span>
+            </button>
+        </template>
+        
+
+
     </div>
 
     <Transition>
@@ -61,6 +72,9 @@ import Modal_ from "../Modal.vue"
 export default {
     name: "TableHeader",
     components: { Modal_, AltModal_, OnClickOutside },
+    props: {
+        select: Boolean
+    },
     data() {
         return {
             name: 'Lista #2',
@@ -71,7 +85,8 @@ export default {
                         icon: 'fa-regular fa-circle-check', 
                         label: 'Eliminar items', 
                         action: () => {
-                            this.close_modal();
+                            this.$emit("selecting");
+                            this.close_modal('delete');
                         }
                     },
                     {

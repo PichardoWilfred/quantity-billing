@@ -20,11 +20,18 @@ export default {
     isValid(list) {
       return Boolean(Object.keys(list).length);
     },
-    unselect() {
+    unselect() { // this whole logic is flopped should be change eventually
       if (this.select) {
         this.select = false;
-        this.$refs.table_content.reset_list()
-      };
+        this.$refs.table_content.reset_list();
+      }
+    },
+    enable_select() {
+      this.select = true;
+      this.$refs.table_content.enable_delete_mode();
+    },
+    select_finished() {
+      this.select = false;
     }
   },
 
@@ -35,11 +42,11 @@ export default {
     <Navbar @click="unselect" />
     <template v-if="isValid(selected_list)">
         <TablesList @click="unselect" />
-        <TableHeader @click="unselect" />
-        <TableContent ref="table_content" @selecting="() => { select = true }"/>
+        <TableHeader @click="unselect" @selecting="enable_select" @unselect="unselect" :select="select" />
+        <TableContent ref="table_content" @select_finished="select_finished"/>
     </template>
     <template v-else>
-      <div class="flex flex-col text-center items-center justify-center my-auto transition-all"> 
+      <div class="flex flex-col text-center items-center justify-center my-auto transition-all" @click="unselect"> 
         <img src="./assets/not-found-alt-bill.svg" class="translate-x-3 w-40" alt="" srcset="">
         <h2 class="font-bold text-black-1 text-lg p-4">
           No pudimos encontrar ninguna tabla en esta sesión.

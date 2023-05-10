@@ -3,6 +3,7 @@
         <template v-if="selected_list.items.length">
             <div v-for="(item, index) in selected_list.items" :key="index"
             @click="select_item(index)"
+            :class="{'selected': is_selected(index)}"
             class="flex items-center justify-between flex-shrink-0 w-full lg:w-[33.33%] xl:w-[20%] px-5 py-2 bg-white cursor-pointer lg:border-r border-gray-2 max-lg:last:border-white shadow-[0_1px_4px_rgba(0,0,0,0.16)]"> 
                 <h4 class="font-bold text-base">
                     Caja #{{ index + 1 }}
@@ -110,10 +111,8 @@ export default {
             this.add_item({ new_value: this.new_value });
             this.new_value = 0;
         },
-        long_handler(index) {
-            this.$emit("selecting")
+        enable_delete_mode(index) { //used from App.vue in a ref
             this.delete_.active = true;
-            this.delete_.items.push(index);
         },
         select_item(index) {
             if (!this.delete_.active) return;
@@ -136,10 +135,8 @@ export default {
             if (this.delete_.active) {
                 this.delete_.active = false;
                 this.delete_.items = [];
+                this.$emit("select_finished")
             }
-        },
-        papo() {
-            console.log('papo');
         },
         ...mapActions(['add_item','delete_items'])
     },
