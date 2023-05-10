@@ -1,19 +1,21 @@
 import { createStore } from "vuex";
-
+const remove_reference = (obj) => {
+    return JSON.parse(JSON.stringify(obj))
+}
 const store = createStore({
     state:  {
         search: '',
         lists: [
             {
                 id: 1,
-                label: { value: 'Lista #1', editing: false },
+                label: 'Lista #1',
                 items: [
                     { quantity: 0, editing: false },
                 ],
             },
             {
                 id: 2,
-                label: { value: 'Lista #2', editing: false },
+                label: 'Lista #2',
                 items: [
                     { quantity: 0, editing: false },
                 ],
@@ -21,7 +23,7 @@ const store = createStore({
         ],
         selected_list: {
             id: 1,
-            label: { value: 'Lista #1', editing: false },
+            label: 'Lista #1',
             items: [
                 { quantity: 0, editing: false },
             ],
@@ -41,10 +43,31 @@ const store = createStore({
             state.selected_list = payload;
         },
         SET_LIST(state, lists) {
-            state.lists = lists
-        }
+            state.lists = lists;
+        },
     },
     actions: {
+        change_label({ state, commit, dispatch }, label) {
+            dispatch('update_lists', { field: 'label', data: label })
+        },
+        delete_items({ state, commit, dispatch }, items){
+            let new_items = remove_reference(state.selected_list.items);
+            items.map((item) => {
+                new_items.splice(item, 1)
+            })
+            dispatch('update_lists', { field: 'items', data: new_items })
+        },
+        update_lists({state, commit, dispatch }, payload) {
+            const selected_list = remove_reference({...state.selected_list, [payload.field]: payload.data});
+            const lists = state.lists.map((list) => {
+                if (list.id === selected_list.id) {
+                    list[payload.field] = payload.data;
+                }
+                return list;
+            })
+            dispatch('select_list', selected_list || state.selected_list);
+            commit('SET_LIST', lists || state.lists);
+        },
         select_list({_, commit}, payload) {
             commit('SELECT_LIST', payload);
         },
@@ -71,8 +94,11 @@ const store = createStore({
             state.lists.push(list);
             if (wasEmpty) dispatch('select_list', list);
         },
-        add_item({ state }, payload) {
-            state.selected_list.items.push({quantity: payload.new_value, editing: false});
+        add_item({ state,commit, dispatch }, payload) {
+            // payload.new_value
+            const new_items = state.selected_list.items;
+            new_items.push({ quantity: payload.new_value, editing: false });
+            dispatch('update_lists', { field: 'items', data: new_items });
         },
         remove_list({state, commit, dispatch}, id) {
             const lists = state.lists.filter((element) => id !== element.id); // has all the items select the one selected!!
@@ -83,7 +109,7 @@ const store = createStore({
                 return;
             }
             // select the new list next to the one that was deleted or simply the first we find on the array.
-            const nextTo = (direction) => state.lists.find((element) => element.id === id + direction) 
+            const nextTo = (direction) => state.lists.find((element) => element.id === id + direction);
             const selected_list = nextTo(1) || nextTo(-1) || state.lists[0];
             dispatch('select_list', selected_list);
         }
