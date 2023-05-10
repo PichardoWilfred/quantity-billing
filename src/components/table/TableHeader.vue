@@ -4,42 +4,107 @@
             <input v-model="label" @click="add_focus" @keyup.enter="enter" type="text" class="w-[175px] h-[40px] rounded-[5px] bg-gray-1 border-2 border-gray-3 pl-2 py-0 focus-within:outline-none font-semibold">
         </OnClickOutside>
         
-        <button class="header-button lg:ml-2">
+        <button class="header-button ml-1 lg:ml-2" @click="open_modal('print')">
             <i class="fa-solid fa-print text-xl"></i>
             <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Imprimir</span>
         </button>
 
-        <button class="header-button lg:ml-2 mr-auto">
-            <i class="fa-solid fa-file-excel text-xl"></i>
-            <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Importar Excel</span>
-        </button>
-
-        <button @click="open_modal" class="header-button">
+        <button @click="open_modal('delete')" class="header-button ml-auto">
             <i class="fa-solid fa-trash text-xl"></i>
-            <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Eliminar tabla</span>
+            <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Eliminar</span>
         </button>
     </div>
-    <Modal_ v-if="modal" title="Eliminar lista" @close="close_modal()" @accept="accept()">
-        <p class="text-md font-light">
-            ¿Estás seguro de que quieres eliminar la lista llamada: <b class="font-semibold">{{selected_list.label}}</b> ?
-        </p>
-    </Modal_>
+
+    <Transition>
+        <AltModal_ v-show="modal.delete" title="Selecciona una opción"  @close="close_modal('delete')">
+            <ul class="mb-1">
+                <li v-for="(option, index) in modal.delete_options" :key="index"
+                @click="option.action"
+                class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-1 active:bg-gray-1">
+                    <i :class="option.icon" class="text-lg"></i>
+                    <span class="text-lg">{{ option.label }}</span>
+                </li>
+            </ul>
+        </AltModal_>
+    </Transition>
+
+    <Transition>
+        <AltModal_ v-show="modal.print" title="Selecciona una opción"  @close="close_modal('print')">
+            <ul class="mb-1">
+                <li v-for="(option, index) in modal.print_options" :key="index"
+                @click="option.action"
+                class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-1 active:bg-gray-1">
+                    <i :class="option.icon" class="text-lg"></i>
+                    <span class="text-lg">{{ option.label }}</span>
+                </li>
+            </ul>
+        </AltModal_>
+    </Transition>
+
+    <Transition>
+        <Modal_ v-if="modal.confirm" title="Eliminar lista" @close="close_modal('confirm')" @accept="accept_confirm">
+            <p class="text-md font-light">
+                ¿Estás seguro de que quieres eliminar la lista con el nombre: <b class="font-semibold">{{ selected_list.label }}</b> ?
+            </p>
+        </Modal_>
+    </Transition>
+
 </template>
 <script>
-import Modal_ from "../Modal.vue"
+
 import { mapActions, mapGetters } from 'vuex';
 import { OnClickOutside } from '@vueuse/components'
-import { toHandlers } from "vue";
+
+import AltModal_ from "../AltModal.vue";
+import Modal_ from "../Modal.vue"
+
 export default {
     name: "TableHeader",
-    components: { Modal_, OnClickOutside },
+    components: { Modal_, AltModal_, OnClickOutside },
     data() {
         return {
             name: 'Lista #2',
-            modal: false,
+            modal: {
+                delete: false,
+                delete_options: [
+                    {   
+                        icon: 'fa-regular fa-circle-check', 
+                        label: 'Eliminar items', 
+                        action: () => {
+                            this.close_modal();
+                        }
+                    },
+                    {
+                        icon: 'fa-solid fa-table-columns', 
+                        label: 'Eliminar tabla', 
+                        action: () => {
+                            this.open_modal('confirm');
+                            this.close_modal('delete');
+                        }
+                    },
+                ],
+                print: false,
+                print_options: [
+                    {   
+                        icon: 'fa-solid fa-print', 
+                        label: 'Imprimir factura', 
+                        action: () => {
+                            this.close_modal();
+                        }
+                    },                   
+                    {   
+                        icon: 'fa-solid fa-file-excel mr-1', 
+                        label: 'Exportar a Excel', 
+                        action: () => {
+                            this.close_modal();
+                        }
+                    },
+                ],
+                confirm: false,
+            },
+            
             focus: false,
             label: '',
-            old_label: '',
         }
     },
     computed: {
@@ -51,15 +116,15 @@ export default {
         }
     },
     methods: {
-        open_modal() {
-            this.modal = true;
+        open_modal(option) {
+            this.modal[option] = true;
         },
-        close_modal() {
-            this.modal = false;
+        close_modal(option) {
+            this.modal[option] = false;
         },
-        accept() {
+        accept_confirm() {
             this.remove_list(this.selected_list.id);
-            this.close_modal();
+            this.close_modal('confirm');
         },
         add_focus() {
             this.focus = true;

@@ -1,23 +1,22 @@
 <template>
     <main class="flex max-lg:flex-col justify-start items-start content-start lg:flex-wrap bg-gray-1 overflow-y-scroll flex-grow-[2] h-max">
         <template v-if="selected_list.items.length">
-            <OnLongPress as="div" v-for="(item, index) in selected_list.items" :key="index" 
-            @trigger="long_handler(index)" :options="{ delay: 800 }" @click="select_item(index)"
-            :class="{'selected': is_selected(index)}"
-            class="flex items-center justify-between flex-shrink-0 w-full lg:w-[33.33%] xl:w-[20%] px-3 py-4 bg-white hover:bg-gray-2 cursor-pointer lg:border-r border-gray-2 max-lg:last:border-white shadow-[0_1px_4px_rgba(0,0,0,0.16)]"> 
-                <h4 class="font-bold text-lg">
-                    Item #{{ index + 1 }}
+            <div v-for="(item, index) in selected_list.items" :key="index"
+            @click="select_item(index)"
+            class="flex items-center justify-between flex-shrink-0 w-full lg:w-[33.33%] xl:w-[20%] px-5 py-2 bg-white cursor-pointer lg:border-r border-gray-2 max-lg:last:border-white shadow-[0_1px_4px_rgba(0,0,0,0.16)]"> 
+                <h4 class="font-bold text-base">
+                    Caja #{{ index + 1 }}
                 </h4>
-                <input v-model="item.quantity" type="number" class="focus-within:outline-none w-[40%] px-3 py-2 border-gray-2 border-2 rounded-[4px]">
-            </OnLongPress>
+                <input v-model="item.quantity" type="number" class="focus-within:outline-none w-4/12 px-3 py-2 border-gray-2 border-2 rounded-[4px]">
+            </div>
         </template>
         <template v-else>
-        <div class="flex flex-col text-center items-center justify-center my-auto w-full h-full transition-all"> 
-            <img src="../../assets/not-found-quantities.svg" class="w-16" alt="" srcset="">
-            <h2 class="font-bold text-black-1 text-lg p-4">
-                Esta tabla aún no tiene items agregados.
-            </h2>
-        </div>
+            <div class="flex flex-col text-center items-center justify-center my-auto w-full h-full transition-all"> 
+                <img src="../../assets/not-found-quantities.svg" class="w-16" alt="" srcset="">
+                <h2 class="font-bold text-black-1 text-lg p-4">
+                    Esta tabla aún no tiene items agregados.
+                </h2>
+            </div>
         </template>
     </main>
     <footer class="flex justify-center lg:justify-between max-lg:flex-col bg-white p-4 border-t-2 border-gray-3 shadow-[0_1px_4px_rgba(0,0,0,0.16)]">
@@ -39,7 +38,7 @@
                 </div>
             </div>
             <div class="flex flex-col items-end">
-                <h4 class="text-gray-4 text-md font-bold">
+                <h4 class="text-gray-4 text-sm font-bold">
                     TOTAL
                 </h4>
                 <h3 class="text-dark text-3xl font-bold">
@@ -63,7 +62,7 @@
         </div>
 
         <div class="hidden lg:flex flex-col items-end">
-            <h4 class="text-gray-4 text-md font-bold">
+            <h4 class="text-gray-4 text-sm font-bold">
                 TOTAL
             </h4>
             <h3 class="text-dark text-3xl font-bold">
@@ -138,6 +137,9 @@ export default {
                 this.delete_.active = false;
                 this.delete_.items = [];
             }
+        },
+        papo() {
+            console.log('papo');
         },
         ...mapActions(['add_item','delete_items'])
     },

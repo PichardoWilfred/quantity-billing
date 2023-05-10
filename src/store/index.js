@@ -88,7 +88,7 @@ const store = createStore({
             checkRepeated();
             const list = {
                 id: list_id,
-                label: { value: `Lista #${list_id}`, editing: false },
+                label: `Lista #${list_id}`,
                 items: [ ],
             }
             state.lists.push(list);
