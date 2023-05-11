@@ -1,12 +1,16 @@
 <template>
     <header class="bg-dark p-2 text-white bg-black">
         <nav class="flex">
-            <button class="flex items-center rounded-full lg:rounded-md hover:bg-black-2 py-3 px-4 transition-all">
-                <i class="fa-solid fa-magnifying-glass text-[20px] lg:pr-3"></i>
-                <span class="max-lg:hidden lg:flex font-medium text-lg">
-                    Buscar tabla
-                </span>
-            </button>
+            <div class="hidden">
+                <button class="flex items-center rounded-full lg:rounded-md hover:bg-black-2 py-3 px-4 transition-all">
+                    <i class="fa-solid fa-magnifying-glass text-[20px] lg:pr-3"></i>
+                    <span class="max-lg:hidden lg:flex font-medium text-lg">
+                        Buscar tabla
+                    </span>
+                </button>
+
+            </div>
+
             <button @click.prevent="add_list()" class="flex items-center ml-auto p-3 hover:bg-black-2 rounded-full lg:rounded-md transition-all">
                 <img src="../assets/add-table.svg" class="h-7 max-lg:w-7 lg:mr-3" alt="" srcset="">
                 <span class="max-lg:hidden lg:flex text-md font-medium">Añadir tabla</span>
@@ -53,6 +57,7 @@ export default {
                         title: 'Reiniciar aplicación',
                         icon: 'fa-arrows-rotate',
                         action: () => {
+                            this.reset()
                         }
                     },
                     {
@@ -76,7 +81,7 @@ export default {
         close_config(){
             this.config.show = false;
         },
-        ...mapActions(['add_list'])
+        ...mapActions(['add_list','reset'])
     }
 }
 </script>

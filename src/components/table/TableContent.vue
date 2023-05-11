@@ -7,7 +7,7 @@
                 <h4 class="font-bold text-base">
                     Caja #{{ index + 1 }}
                 </h4>
-                <input v-model="item.quantity" type="number" class="focus-within:outline-none w-4/12 px-3 py-2 border-gray-2 border-2 rounded-[4px]">
+                <input v-model="item.quantity" @blur="update_quantity" type="number" class="focus-within:outline-none w-4/12 px-3 py-2 border-gray-2 border-2 rounded-[4px]">
             </div>
         </template>
         <template v-else>
@@ -127,6 +127,9 @@ export default {
             this.delete_items(this.delete_.items);
             this.reset_list();
         },
+        update_quantity(){
+            this.update_lists({ field: 'items', data: this.selected_list.items })
+        },
         is_selected(index) {
             return this.delete_.items.indexOf(index) !== -1;
         },
@@ -137,7 +140,7 @@ export default {
                 this.$emit("select_finished")
             }
         },
-        ...mapActions(['add_item','delete_items'])
+        ...mapActions(['add_item','delete_items', 'update_lists'])
     },
     mounted(){
     }

@@ -1,33 +1,34 @@
 import { createStore } from "vuex";
+
 const remove_reference = (obj) => {
     return JSON.parse(JSON.stringify(obj))
 }
+const default_list = {
+    id: 1,
+    label: 'Lista #1',
+    items: [
+        { quantity: 0, editing: false },
+    ],
+}
+const fetch_data = (item) => {
+    return JSON.parse(localStorage.getItem(item));
+}
+const send_data = (key, data) => {
+    localStorage.setItem(key, JSON.stringify(data));
+}
+const update_localStorage = (lists, selected_list) => {
+    send_data('lists', lists);
+    send_data('selected_list', selected_list);
+}
+
+const lists = fetch_data('lists') || [default_list];
+const selected_list = fetch_data('selected_list') || default_list;
+
 const store = createStore({
     state:  {
         search: '',
-        lists: [
-            {
-                id: 1,
-                label: 'Lista #1',
-                items: [
-                    { quantity: 0, editing: false },
-                ],
-            },
-            {
-                id: 2,
-                label: 'Lista #2',
-                items: [
-                    { quantity: 0, editing: false },
-                ],
-            },
-        ],
-        selected_list: {
-            id: 1,
-            label: 'Lista #1',
-            items: [
-                { quantity: 0, editing: false },
-            ],
-        },
+        lists,
+        selected_list,
     },
     getters: {
         lists(state) {
@@ -64,13 +65,13 @@ const store = createStore({
                     list[payload.field] = payload.data;
                 }
                 return list;
-            })
+            });
             dispatch('select_list', selected_list || state.selected_list);
             commit('SET_LIST', lists || state.lists);
         },
         select_list({state, commit, dispatch}, payload) {
-            // dispatch('update_lists', { field: 'items', data: state.selected_list.items })
             commit('SELECT_LIST', payload);
+            update_localStorage(state.lists, state.selected_list);
         },
         add_list({ state, commit, dispatch }) {
             const wasEmpty = !state.lists.length;
@@ -94,9 +95,9 @@ const store = createStore({
             }
             state.lists.push(list);
             if (wasEmpty) dispatch('select_list', list);
+            update_localStorage(state.lists, state.selected_list);
         },
-        add_item({ state,commit, dispatch }, payload) {
-            // payload.new_value
+        add_item({ state,commit, dispatch }, payload) { // payload.new_value
             const new_items = state.selected_list.items;
             new_items.push({ quantity: payload.new_value, editing: false });
             dispatch('update_lists', { field: 'items', data: new_items });
@@ -113,6 +114,11 @@ const store = createStore({
             const nextTo = (direction) => state.lists.find((element) => element.id === id + direction);
             const selected_list = nextTo(1) || nextTo(-1) || state.lists[0];
             dispatch('select_list', selected_list);
+        },
+        reset({state, commit}) {
+            commit('SELECT_LIST', {});
+            commit('SET_LIST', [])
+            localStorage.clear();
         }
     }
 });
