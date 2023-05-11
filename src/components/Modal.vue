@@ -9,7 +9,7 @@
             </div>
             <slot></slot>
             <div class="flex justify-end space-x-2 mt-3">
-                <button class="flex-shrink-0 border-2 text-black text-sm rounded px-4 py-1.5 font-semibold" @click="close()">Cancelar</button>
+                <button v-if="!single_option" class="flex-shrink-0 border-2 text-black text-sm rounded px-4 py-1.5 font-semibold" @click="close()">Cancelar</button>
                 <button class="flex-shrink-0 bg-black text-white text-sm rounded px-4 py-1.5" @click="accept()">Aceptar</button>
             </div>
         </div>
@@ -23,7 +23,8 @@ export default {
         title: {
             type: String,
             default: 'Elija una opción'
-        }
+        },
+        single_option: Boolean
     },
     methods: {
         close() {

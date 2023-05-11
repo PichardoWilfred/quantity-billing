@@ -55,7 +55,7 @@
         </button>
 
         <div class="flex justify-center lg:w-[380px] lg:items-center mt-2 lg:mx-auto">
-            <input v-model="new_value" @keyup.enter="enter()" @click="reset_list" type="number" class="lg:h-[40px] pl-3 border-gray-4 border mr-2 flex-grow-[2] rounded-md focus-within:outline-none max-w-[280px]">
+            <input v-model="new_value" @keyup.enter="enter" @click="reset_list" type="number" class="lg:h-[40px] pl-3 border-gray-4 border mr-2 flex-grow-[2] rounded-md focus-within:outline-none max-w-[280px]">
             <button class="bg-black hover:bg-black-2 text-white rounded-md flex-grow-2" @click.prevent="enter">
                 <i class="fa-solid fa-paper-plane p-3 px-5"></i>
             </button>
@@ -70,17 +70,31 @@
             </h3>
         </div>
     </footer>
+
+    <Transition>
+        <Modal_ v-if="modal.limit" title="Límite de items excedido" @close="() => { modal.limit = false }" @accept="() => { modal.limit = false }" single_option>
+            <p class="text-md font-light">
+                Haz excedido el límite de items por lista, para seguir registrando cajas, porfavor crea otra lista presionando el ícono 
+                <img src="../../assets/add-table-black.svg" class="inline h-7 max-lg:w-7" alt="" /> en la barra superior.
+            </p>
+        </Modal_>
+    </Transition>
+
 </template>
 <script>
+import Modal_ from "../Modal.vue"
 import { mapGetters, mapActions } from 'vuex';
 import { OnLongPress, OnClickOutside } from '@vueuse/components'
 export default {
     name: 'TableContent',
-    components: {OnLongPress, OnClickOutside},
+    components: {OnLongPress, OnClickOutside, Modal_},
     data() {
         return {
             delete_: { active: false, items: [] },
             new_value: 0,
+            modal: {
+                limit: false
+            }
         }
     },
     computed: {
@@ -105,6 +119,10 @@ export default {
     methods: {
         enter(){ // adding the quantity to the selected_list
             this.reset_list();
+            if ( this.selected_list.items.length >= 800 ) {
+                this.modal.limit = true;
+                return;
+            }; 
             // validating the number
             if ((this.new_value * 1) === 0) return;
             this.add_item({ new_value: this.new_value });
@@ -140,7 +158,7 @@ export default {
                 this.$emit("select_finished")
             }
         },
-        ...mapActions(['add_item','delete_items', 'update_lists'])
+        ...mapActions(['add_item','delete_items','update_lists'])
     },
     mounted(){
     }
