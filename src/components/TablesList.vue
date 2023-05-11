@@ -1,7 +1,7 @@
 <template>
     <ul class="flex flex-shrink-0 space-x-10 px-4 flex-nowrap overflow-x-scroll pt-6">
         <li v-for="(list, index) in lists" :key="index" class="flex-shrink-0 first:mr-0 font-light text-lg max-w-[90px] px-[5px] cursor-pointer truncate" 
-        :class="{'selected': list.id === selected_list.id}" @click="select_list(list)">
+        :class="{'selected': list.id === selected_list.id}" @click="save_and_select_list(list)">
             {{ list.label }}
         </li>
     </ul>
@@ -17,7 +17,11 @@ export default {
         ...mapGetters(['lists','selected_list'])
     },
     methods: {
-        ...mapActions(['select_list'])
+        save_and_select_list(list){
+            this.update_lists({ field: 'items', data: this.selected_list.items })
+            this.select_list(list)
+        },
+        ...mapActions(['select_list','update_lists'])
     }
 
 }

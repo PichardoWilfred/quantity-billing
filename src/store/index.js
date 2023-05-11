@@ -68,7 +68,8 @@ const store = createStore({
             dispatch('select_list', selected_list || state.selected_list);
             commit('SET_LIST', lists || state.lists);
         },
-        select_list({_, commit}, payload) {
+        select_list({state, commit, dispatch}, payload) {
+            // dispatch('update_lists', { field: 'items', data: state.selected_list.items })
             commit('SELECT_LIST', payload);
         },
         add_list({ state, commit, dispatch }) {

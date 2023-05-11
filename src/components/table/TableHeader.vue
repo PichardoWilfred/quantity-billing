@@ -13,7 +13,7 @@
             <button @click="open_modal('delete')" class="header-button ml-auto">
                 <i class="fa-solid fa-trash text-xl"></i>
                 <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Eliminar</span>
-            </button>        
+            </button>
         </template>
         <template v-else>
             <button @click="() => { $emit('unselect') }" class="header-button ml-auto">
@@ -21,9 +21,6 @@
                 <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Cancelar</span>
             </button>
         </template>
-        
-
-
     </div>
 
     <Transition>
