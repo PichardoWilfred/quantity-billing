@@ -20,6 +20,7 @@
         </template>
     </main>
     <footer class="flex justify-center lg:justify-between max-lg:flex-col bg-white p-4 border-t-2 border-gray-3 shadow-[0_1px_4px_rgba(0,0,0,0.16)]">
+        
         <div class="max-lg:flex hidden items-center justify-between">
             <div class="flex">
                 <button v-if="delete_.active" @click="delete_selected" class="flex items-center border-2 px-3 py-2 rounded-md border-gray-5 text-gray-5 lg:mx-3 max-lg:mr-3">
@@ -47,12 +48,22 @@
             </div>
         </div>
         
-        <button class="hidden lg:flex items-center border-2 px-3 py-2 rounded-md border-gray-5 text-gray-5 lg:mx-3 max-lg:mr-3">
-            <i class="fa-solid fa-xmark text-xl mr-3"></i>
-            <span class="text-md font-semibold">
-                Eliminar item
-            </span>
-        </button>
+        <div class="hidden lg:flex">
+            <button v-if="delete_.active" @click="delete_selected" class="flex items-center border-2 px-3 py-2 rounded-md border-gray-5 text-gray-5 lg:mx-3 max-lg:mr-3">
+                <i class="fa-solid fa-xmark text-xl mr-3"></i>
+                <span class="text-md font-semibold">
+                    Eliminar item
+                </span>
+            </button>
+            <div v-if="!delete_.active" class="flex flex-col items-start">
+                <h4 class="text-gray-4 text-sm font-bold">
+                    CAJAS
+                </h4>
+                <h3 class="text-dark text-3xl font-bold">
+                    {{ box_quantity }}
+                </h3>
+            </div>
+        </div>
 
         <div class="flex justify-center lg:w-[380px] lg:items-center mt-2 lg:mx-auto">
             <input v-model="new_value" @keyup.enter="enter" @click="reset_list" type="number" class="lg:h-[40px] pl-3 border-gray-4 border mr-2 flex-grow-[2] rounded-md focus-within:outline-none max-w-[280px]">
