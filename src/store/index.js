@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-
+import { toRaw } from "vue";
 const remove_reference = (obj) => {
     return JSON.parse(JSON.stringify(obj))
 }
@@ -51,11 +51,8 @@ const store = createStore({
         change_label({ state, commit, dispatch }, label) {
             dispatch('update_lists', { field: 'label', data: label })
         },
-        delete_items({ state, commit, dispatch }, items){
-            let new_items = remove_reference(state.selected_list.items);
-            items.map((item) => {
-                new_items.splice(item, 1)
-            })
+        delete_items({ state, commit, dispatch }, items) {;
+            let new_items = [...toRaw(state.selected_list.items)].filter( (item, index) => items.indexOf(index) === -1);
             dispatch('update_lists', { field: 'items', data: new_items })
         },
         update_lists({state, commit, dispatch }, payload) {
@@ -81,7 +78,7 @@ const store = createStore({
                 const already = state.lists.find((list)=> list.id === (list_id + amount));
                 if (already) {
                     amount += 1;
-                    notRepeated();
+                    checkRepeated();
                 }else {
                     list_id += amount;
                     return;
