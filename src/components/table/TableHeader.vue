@@ -65,6 +65,7 @@ import { OnClickOutside } from '@vueuse/components'
 
 import AltModal_ from "../AltModal.vue";
 import Modal_ from "../Modal.vue"
+import '../../lib/files-saver';
 
 export default {
     name: "TableHeader",
@@ -101,14 +102,23 @@ export default {
                         icon: 'fa-solid fa-print', 
                         label: 'Imprimir factura', 
                         action: () => {
-                            this.close_modal();
+                            printJS({
+                                printable: 'printable-list', 
+                                scanStyles: false, 
+                                css: './src/assets/css/print.css', 
+                                type: 'html', 
+                                documentTitle:`InduCarg_${ new Date().getTime() }`, 
+                                repeatTableHeader: false,
+                            })
+                            this.close_modal('print');
                         }
                     },                   
                     {   
                         icon: 'fa-solid fa-file-excel mr-1', 
                         label: 'Exportar a Excel', 
                         action: () => {
-                            this.close_modal();
+                            this.export_excel();
+                            this.close_modal('print');
                         }
                     },
                 ],
@@ -151,6 +161,25 @@ export default {
             if (valid && valid !== '' && valid !== ' ') {
                 this.change_label(valid);
             };
+        },
+        export_excel() {
+            const old_quantities = JSON.parse(JSON.stringify(this.selected_list.items));
+            const data = old_quantities.map((item, index) => {
+                return { nombre: `Caja #${(index + 1)}`, cantidad: item.quantity }
+            });
+            const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+            const EXCEL_EXTENSION = '.xlsx';
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = {
+                Sheets: {
+                    'data' : worksheet
+                },
+                SheetNames: ['data']
+            };
+            const excelBuffer = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
+            
+            const data_ = new Blob([excelBuffer], {type: EXCEL_TYPE});
+            saveAs(data_, `InduCarg_${new Date().getTime()}` + EXCEL_EXTENSION);
         },
         ...mapActions(['remove_list','change_label'])
     },

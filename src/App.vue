@@ -38,7 +38,7 @@ export default {
 }
 </script>
 <template>
-  <div class="flex flex-col h-screen">
+  <div class="flex flex-col h-screen" id="printable-list">
     <Navbar @click="unselect" />
     <template v-if="isValid(selected_list)">
         <TablesList @click="unselect" />
@@ -46,7 +46,7 @@ export default {
         <TableContent ref="table_content" @select_finished="select_finished"/>
     </template>
     <template v-else>
-      <div class="flex flex-col text-center items-center justify-center my-auto transition-all" @click="unselect"> 
+      <div class="flex flex-col text-center items-center justify-center my-auto transition-all non-printable" @click="unselect"> 
         <img src="./assets/not-found-alt-bill.svg" class="translate-x-3 w-40" alt="" srcset="">
         <h2 class="font-bold text-black-1 text-lg p-4">
           No pudimos encontrar ninguna tabla en esta sesión.

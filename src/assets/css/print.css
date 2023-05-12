@@ -1,0 +1,19 @@
+
+body {
+    background-color: #E6E8EC;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+}
+/* @media print {  */
+* {
+    box-sizing: content-box;
+}
+.non-printable, .not-printable {
+    background-color: red !important;
+    display: none !important;
+}
+.d-print {
+    display: block !important;
+}
+/* } */

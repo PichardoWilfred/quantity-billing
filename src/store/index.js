@@ -51,7 +51,7 @@ const store = createStore({
         change_label({ state, commit, dispatch }, label) {
             dispatch('update_lists', { field: 'label', data: label })
         },
-        delete_items({ state, commit, dispatch }, items) {;
+        delete_items({ state, commit, dispatch }, items) {
             let new_items = [...toRaw(state.selected_list.items)].filter( (item, index) => items.indexOf(index) === -1);
             dispatch('update_lists', { field: 'items', data: new_items })
         },
@@ -116,8 +116,49 @@ const store = createStore({
             commit('SELECT_LIST', {});
             commit('SET_LIST', [])
             localStorage.clear();
+        },
+        download(){
+            download_app();
         }
     }
 });
 
+ //hetting our date
+let prompt_event;
+window.addEventListener('appinstalled', () => {
+    // Esconder la promoción de instalación de la PWA
+    // hideInstallPromotion();
+    // Limpiar el defferedPrompt para que pueda ser eliminado por el recolector de basura
+    prompt_event = null;
+    // De manera opcional, enviar el evento de analíticos para indicar una instalación exitosa
+    console.log('PWA was installed');
+});
+
+// registering service workers
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+    .register('./sw.js')
+}
+
+
+window.addEventListener("beforeinstallprompt", (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    prompt_event = e;
+    // Update UI to notify the user they can add to home screen
+});
+
+function download_app() {
+    prompt_event.prompt();
+    // Wait for the user to respond to the prompt
+    prompt_event.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === "accepted") {
+            console.log("User accepted the A2HS prompt");
+        } else {
+            console.log("User dismissed the A2HS prompt");
+        }
+        prompt_event = null;
+    });
+}
 export default store;

@@ -1,5 +1,5 @@
 <template>
-    <header class="bg-dark p-2 text-white bg-black">
+    <header class="bg-dark p-2 text-white bg-black non-printable">
         <nav class="flex">
             <div class="hidden">
                 <button class="flex items-center rounded-full lg:rounded-md hover:bg-black-2 py-3 px-4 transition-all">
@@ -42,7 +42,6 @@
     </header>  
 </template>
 <script>
-
 import { mapActions } from 'vuex';
 import { OnClickOutside } from '@vueuse/components';
 export default {
@@ -64,6 +63,7 @@ export default {
                         title: 'Descargar aplicación',
                         icon: 'fa-download',
                         action: () => {
+                            this.download();
                         }
                     },
                     {
@@ -81,7 +81,7 @@ export default {
         close_config(){
             this.config.show = false;
         },
-        ...mapActions(['add_list','reset'])
+        ...mapActions(['add_list','reset', 'download'])
     }
 }
 </script>
