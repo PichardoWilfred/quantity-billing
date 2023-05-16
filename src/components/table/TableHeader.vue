@@ -1,7 +1,15 @@
 <template lang="">
+    <div class="d-print flex justify-between items-center bg-white">
+        <img src="../../assets/bill_logo.png" alt="" srcset="" class="bill-logo">
+        <date class="font-bold">
+            {{ date }}
+        </date>
+
+
+    </div>
     <div class="flex items-center px-3 py-4 bg-white border-b-2 border-gray-2 shadow-[0_1px_4px_rgba(0,0,0,0.16)]">
         <OnClickOutside @trigger="remove_focus">
-            <input v-model="label" @click="add_focus" @keyup.enter="enter" type="text" class="w-[175px] h-[40px] rounded-[5px] bg-gray-1 border-2 border-gray-3 pl-2 py-0 focus-within:outline-none font-semibold">
+            <input v-model="label" @click="add_focus" @keyup.enter="enter" type="text" class="w-[175px] h-[40px] rounded-[5px] bg-gray-1 border-2 border-gray-3 pl-2 py-0 focus-within:outline-none font-semibold mr-0">
         </OnClickOutside>
         
         <button class="header-button ml-1 lg:ml-2" @click="open_modal('print')">
@@ -10,7 +18,7 @@
         </button>
 
         <template v-if="!select">
-            <button @click="open_modal('delete')" class="header-button ml-auto">
+            <button @click="open_modal('delete')" class="header-button delete ml-auto">
                 <i class="fa-solid fa-trash text-xl"></i>
                 <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Eliminar</span>
             </button>
@@ -21,6 +29,22 @@
                 <span class="max-lg:hidden lg:flex text-md font-medium ml-2">Cancelar</span>
             </button>
         </template>
+        <div class="d-print flex flex-col items-start mr-auto">
+            <h4 class="text-gray-4 text-sm font-bold">
+                CAJAS:
+            </h4>
+            <h3 class="text-dark text-3xl font-bold">
+                {{ box_quantity }}
+            </h3>
+        </div>
+        <div class="d-print flex flex-col items-start">
+            <h4 class="text-gray-4 text-sm font-bold">
+                TOTAL:
+            </h4>
+            <h3 class="text-dark text-3xl font-bold">
+                {{ total }}
+            </h3>
+        </div>
     </div>
 
     <Transition>
@@ -37,7 +61,7 @@
     </Transition>
 
     <Transition>
-        <AltModal_ v-show="modal.print" title="Selecciona una opción"  @close="close_modal('print')">
+        <AltModal_ v-if="modal.print" title="Selecciona una opción"  @close="close_modal('print')" class="non-printable">
             <ul class="mb-1">
                 <li v-for="(option, index) in modal.print_options" :key="index"
                 @click="option.action"
@@ -102,15 +126,15 @@ export default {
                         icon: 'fa-solid fa-print', 
                         label: 'Imprimir factura', 
                         action: () => {
+                            this.close_modal('print');
                             printJS({
                                 printable: 'printable-list', 
                                 scanStyles: false, 
-                                css: './src/assets/css/print.css', 
+                                css: './print.css', 
                                 type: 'html', 
                                 documentTitle:`InduCarg_${ new Date().getTime() }`, 
                                 repeatTableHeader: false,
                             })
-                            this.close_modal('print');
                         }
                     },                   
                     {   
@@ -129,8 +153,8 @@ export default {
             label: '',
         }
     },
-    computed: {
-        ...mapGetters(['selected_list','lists']),
+    computed: {     
+        ...mapGetters(['selected_list', 'lists', 'box_quantity', 'total', 'date']),
     },
     watch: {
         selected_list(new_value) {
@@ -140,6 +164,7 @@ export default {
     methods: {
         open_modal(option) {
             this.modal[option] = true;
+            window.scrollTo(0, document.body.scrollHeight);
         },
         close_modal(option) {
             this.modal[option] = false;

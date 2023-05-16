@@ -5,3 +5,7 @@
 .v-enter-from, .v-leave-to {
     opacity: 0;
 }
+
+.d-print {
+    display: none !important;
+}

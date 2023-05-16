@@ -31,13 +31,34 @@ const store = createStore({
         selected_list,
     },
     getters: {
+        date() {
+            const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            const d = new Date();
+            return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+        },
         lists(state) {
             if (state.search.length) {
                 return state.lists.filter( list => list.label.startsWith(state.search) );
             }            
                 return state.lists;
         },
-        selected_list: ({ selected_list }) => selected_list
+        selected_list: ({ selected_list }) => selected_list,
+        total(state){
+            let total = 0;
+            state.selected_list.items.map((element) => {
+                total += (element.quantity || 0) * 1;
+            });
+            return total;
+        },
+        box_quantity(state) {
+            let box_quantity = 0;
+            state.selected_list.items.map((element) => {
+                if ((element.quantity * 1) !== 0) {
+                    box_quantity += 1;
+                };
+            });
+            return box_quantity;
+        },
     },
     mutations: {
         SELECT_LIST(state, payload) {

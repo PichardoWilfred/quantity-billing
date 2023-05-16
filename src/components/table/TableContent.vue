@@ -1,10 +1,10 @@
 <template>
-    <main class="flex max-lg:flex-col justify-start items-start content-start lg:flex-wrap bg-gray-1 overflow-y-scroll flex-grow-[2] h-max">
+    <main class="main-container flex max-lg:flex-col justify-start items-start content-start lg:flex-wrap bg-gray-1 overflow-y-scroll flex-grow-[2] h-max">
         <template v-if="selected_list.items.length">
             <div v-for="(item, index) in selected_list.items" :key="index" @click="select_item(index)"
             :class="{'selected': is_selected(index)}"
-            class="flex items-center justify-between flex-shrink-0 w-full lg:w-[33.33%] xl:w-[20%] px-5 py-2 bg-white cursor-pointer lg:border-r border-gray-2 max-lg:last:border-white shadow-[0_1px_4px_rgba(0,0,0,0.16)]"> 
-                <h4 class="font-bold text-base">
+            class="item-container flex items-center justify-between flex-shrink-0 w-full lg:w-[33.33%] xl:w-[20%] px-5 py-2 bg-white cursor-pointer lg:border-r border-gray-2 max-lg:last:border-white shadow-[0_1px_4px_rgba(0,0,0,0.16)]"> 
+                <h4 class="item-title font-bold text-base">
                     Caja #{{ index + 1 }}
                 </h4>
                 <input v-model="item.quantity" :disabled="this.delete_.active" @blur="update_quantity" type="number" class="focus-within:outline-none w-4/12 px-3 py-2 border-gray-2 border-2 rounded-[4px]">
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <div class="flex justify-center lg:w-[380px] lg:items-center mt-2 lg:mx-auto">
+        <div class="non-printable flex justify-center lg:w-[380px] lg:items-center mt-2 lg:mx-auto">
             <input v-model="new_value" @keyup.enter="enter" @click="reset_list" type="number" class="lg:h-[40px] pl-3 border-gray-4 border mr-2 flex-grow-[2] rounded-md focus-within:outline-none max-w-[280px]">
             <button class="bg-black hover:bg-black-2 text-white rounded-md flex-grow-2" @click.prevent="enter">
                 <i class="fa-solid fa-paper-plane p-3 px-5"></i>
@@ -109,23 +109,7 @@ export default {
         }
     },
     computed: {
-        total() {
-            let total = 0;
-            this.selected_list.items.map((element) => {
-                total += (element.quantity || 0) * 1;
-            });
-            return total;
-        },
-        box_quantity() {
-            let box_quantity = 0;
-            this.selected_list.items.map((element) => {
-                if ((element.quantity * 1) !== 0) {
-                    box_quantity += 1;
-                };
-            });
-            return box_quantity;
-        },
-        ...mapGetters(['selected_list']),
+        ...mapGetters(['selected_list','total','box_quantity']),
     },
     methods: {
         enter(){ // adding the quantity to the selected_list
