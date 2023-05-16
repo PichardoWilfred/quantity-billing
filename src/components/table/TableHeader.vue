@@ -31,7 +31,7 @@
         </template>
         <div class="d-print flex flex-col items-start mr-auto">
             <h4 class="text-gray-4 text-sm font-bold">
-                CAJAS:
+                CAJAS
             </h4>
             <h3 class="text-dark text-3xl font-bold">
                 {{ box_quantity }}
@@ -39,7 +39,7 @@
         </div>
         <div class="d-print flex flex-col items-start">
             <h4 class="text-gray-4 text-sm font-bold">
-                TOTAL:
+                TOTAL
             </h4>
             <h3 class="text-dark text-3xl font-bold">
                 {{ total }}
