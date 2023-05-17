@@ -1,10 +1,10 @@
 <template lang="">
     <div class="d-print flex justify-between items-center bg-white">
+
         <img src="../../assets/bill_logo.png" alt="" srcset="" class="bill-logo">
         <date class="font-bold">
             {{ date }}
         </date>
-
 
     </div>
     <div class="flex items-center px-3 py-4 bg-white border-b-2 border-gray-2 shadow-[0_1px_4px_rgba(0,0,0,0.16)]">
@@ -49,7 +49,7 @@
 
     <Transition>
         <AltModal_ v-show="modal.delete" title="Selecciona una opción"  @close="close_modal('delete')">
-            <ul class="mb-1">
+            <ul class="mb-1">   
                 <li v-for="(option, index) in modal.delete_options" :key="index"
                 @click="option.action"
                 class="flex items-center space-x-3 px-4 py-2 hover:bg-gray-1 active:bg-gray-1">

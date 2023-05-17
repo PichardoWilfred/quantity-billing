@@ -68,7 +68,7 @@ export default {
                     },
                     {
                         title: 'Versión',
-                        version: 'v0.1.0',
+                        version: 'v1.0.0',
                         icon: 'fa-code-merge',
                         action: () => {
                         }
